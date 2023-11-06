@@ -74,7 +74,8 @@ def plot_history(reward_history, rolling_window=20, lower_limit=None,
     if plot_rw:
         plt.plot(xs, rh, linewidth=1, color='cyan')
     if plot_rm:
-        plt.plot(xs, rollingMean, linewidth=2, color='magenta')
+        # plt.plot(xs, rollingMean, linewidth=2, color='magenta')
+        plt.plot(xs, rollingMean.values.ravel(), linewidth=2, color='magenta')
 
     text_color = 'black'
         
@@ -128,12 +129,14 @@ def create_video(filename, env, q_network, fps=30):
     with imageio.get_writer(filename, fps=fps) as video:
         done = False
         state = env.reset()
-        frame = env.render(mode="rgb_array")
+        # frame = env.render(mode="rgb_array")
+        frame = env.render()
         video.append_data(frame)
         while not done:    
             state = np.expand_dims(state, axis=0)
             q_values = q_network(state)
             action = np.argmax(q_values.numpy()[0])
             state, _, done, _ = env.step(action)
-            frame = env.render(mode="rgb_array")
+            # frame = env.render(mode="rgb_array")
+            frame = env.render()
             video.append_data(frame)
